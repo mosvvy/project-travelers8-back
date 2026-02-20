@@ -12,6 +12,7 @@ import storiesRoutes from './routes/storiesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import { errors } from 'celebrate';
+import storiesRouter from './routes/stories.js';
 // import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -37,3 +38,4 @@ await connectMongoDB();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+app.use('/api/stories', storiesRouter);
