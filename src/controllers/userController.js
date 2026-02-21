@@ -7,26 +7,32 @@ exports.saveStory = async (req, res) => {
     const { storyId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(storyId)) {
-      return res.status(400).json({ message: 'Невірний формат ID статті' });
+      return res.status(400).json({ message: 'Invalid story ID format' });
     }
 
     const story = await Story.findById(storyId);
     if (!story) {
-      return res.status(404).json({ message: 'Статтю не знайдено' });
+      return res.status(404).json({ message: 'Story not found' });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user._id,
-      { $addToSet: { savedStories: storyId } },
-      { new: true },
-    ).select('-password');
+    const user = await User.findById(req.user._id);
+
+    const isSaved = user.savedStories.includes(storyId);
+
+    let update;
+    if (isSaved) {
+      update = { $pull: { savedStories: storyId } };
+    } else {
+      update = { $addToSet: { savedStories: storyId } };
+    }
+
+    await User.findByIdAndUpdate(req.user._id, update);
 
     res.status(200).json({
-      message: 'Статтю успішно додано до збережених',
-      savedStories: updatedUser.savedStories,
+      message: isSaved ? 'Story removed from saved' : 'Story added to saved',
+      isSaved: !isSaved,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Помилка сервера при збереженні статті' });
+    res.status(500).json({ message: 'Server error' });
   }
 };
