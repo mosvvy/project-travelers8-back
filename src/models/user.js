@@ -1,5 +1,3 @@
-// src/models/users.js
-
 import { Schema, model } from 'mongoose';
 
 const userSchema = new Schema({
@@ -18,6 +16,15 @@ const userSchema = new Schema({
   description: {
     type: String,
     trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
   },
 });
 
