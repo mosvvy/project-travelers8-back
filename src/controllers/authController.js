@@ -7,11 +7,6 @@ import { createSession, setSessionCookies } from '../services/auth.js';
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  // Перевіряємо чи поля передані
-  if (!email || !password) {
-    throw createHttpError(400, 'Email and password required');
-  }
-
   const user = await User.findOne({ email });
 
   if (!user) {
