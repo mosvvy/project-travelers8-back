@@ -4,6 +4,6 @@ import { logoutUser } from '../controllers/authController.js';
 
 const router = Router();
 
-router.post('/logout', logoutUser);
+router.post('/auth/logout', logoutUser);
 
 export default router;
