@@ -12,7 +12,7 @@ import storiesRoutes from './routes/storiesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import { errors } from 'celebrate';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -20,7 +20,7 @@ const PORT = process.env.PORT ?? 3000;
 app.use(logger);
 app.use(express.json());
 app.use(cors());
-// app.use(cookieParser());
+app.use(cookieParser());
 
 app.use(authRoutes);
 app.use(usersRoutes);
