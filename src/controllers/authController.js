@@ -28,5 +28,10 @@ export const loginUser = async (req, res) => {
 
   const newSession = await createSession(user._id);
   setSessionCookies(res, newSession);
-  res.status(200).json(user);
+  const { password: skip, ...userResponse } = user.toObject();
+
+  res.status(200).json({
+    user: userResponse,
+    token,
+  });
 };
