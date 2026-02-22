@@ -32,7 +32,7 @@ const userSchema = new Schema(
     savedArticles: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Article',
+        ref: 'Story',
       },
     ],
   },
