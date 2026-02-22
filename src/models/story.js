@@ -19,13 +19,13 @@ const articleSchema = new Schema(
     },
 
     category: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Category',
       required: true,
     },
 
     ownerId: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
