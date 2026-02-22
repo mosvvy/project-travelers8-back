@@ -38,36 +38,37 @@
 // };
 //
 //
-const createError = require('http-errors');
-const User = require('../models/User');
-const Story = require('../models/Story');
-const mongoose = require('mongoose');
+import createHttpError from 'http-errors';
+import mongoose from 'mongoose';
+import User from '../models/User.js';
+import Story from '../models/Story.js';
 
-exports.saveStory = async (req, res, next) => {
+export const saveStory = async (req, res, next) => {
   try {
     const { storyId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(storyId)) {
-      return next(createError(400, 'Invalid story ID format'));
+      return next(createHttpError(400, 'Invalid story ID format'));
     }
 
     const story = await Story.findById(storyId);
     if (!story) {
-      return next(createError(404, 'Story not found'));
+      return next(createHttpError(404, 'Story not found'));
     }
 
-    const user = await User.findById(req.user._id);
-    const isSaved = user.savedStories.includes(storyId);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $addToSet: { savedStories: storyId } },
+      { new: true },
+    ).select('-password');
 
-    const update = isSaved
-      ? { $pull: { savedStories: storyId } }
-      : { $addToSet: { savedStories: storyId } };
-
-    await User.findByIdAndUpdate(req.user._id, update);
+    if (!updatedUser) {
+      return next(createHttpError(404, 'User not found'));
+    }
 
     res.status(200).json({
-      message: isSaved ? 'Story removed' : 'Story added',
-      isSaved: !isSaved,
+      message: 'Story successfully saved',
+      savedStories: updatedUser.savedStories,
     });
   } catch (error) {
     next(error);
