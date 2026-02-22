@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
-import User from '../models/User.js';
-import Session from '../models/session.js';
+import { User } from '../models/User.js';
+import { Session } from '../models/session.js';
 import { createSession, setSessionCookies } from '../services/auth.js';
 
 export const registerController = async (req, res, next) => {
