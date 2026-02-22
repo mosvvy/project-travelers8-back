@@ -1,38 +1,75 @@
+// const User = require('../models/User');
+// const Story = require('../models/Story');
+// const mongoose = require('mongoose');
+
+// exports.saveStory = async (req, res) => {
+//   try {
+//     const { storyId } = req.params;
+
+//     if (!mongoose.Types.ObjectId.isValid(storyId)) {
+//       return res.status(400).json({ message: 'Invalid story ID format' });
+//     }
+
+//     const story = await Story.findById(storyId);
+//     if (!story) {
+//       return res.status(404).json({ message: 'Story not found' });
+//     }
+
+//     const user = await User.findById(req.user._id);
+
+//     const isSaved = user.savedStories.includes(storyId);
+
+//     let update;
+//     if (isSaved) {
+//       update = { $pull: { savedStories: storyId } };
+//     } else {
+//       update = { $addToSet: { savedStories: storyId } };
+//     }
+
+//     await User.findByIdAndUpdate(req.user._id, update);
+
+//     res.status(200).json({
+//       message: isSaved ? 'Story removed from saved' : 'Story added to saved',
+//       isSaved: !isSaved,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
+//
+//
+const createError = require('http-errors');
 const User = require('../models/User');
 const Story = require('../models/Story');
 const mongoose = require('mongoose');
 
-exports.saveStory = async (req, res) => {
+exports.saveStory = async (req, res, next) => {
   try {
     const { storyId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(storyId)) {
-      return res.status(400).json({ message: 'Invalid story ID format' });
+      return next(createError(400, 'Invalid story ID format'));
     }
 
     const story = await Story.findById(storyId);
     if (!story) {
-      return res.status(404).json({ message: 'Story not found' });
+      return next(createError(404, 'Story not found'));
     }
 
     const user = await User.findById(req.user._id);
-
     const isSaved = user.savedStories.includes(storyId);
 
-    let update;
-    if (isSaved) {
-      update = { $pull: { savedStories: storyId } };
-    } else {
-      update = { $addToSet: { savedStories: storyId } };
-    }
+    const update = isSaved
+      ? { $pull: { savedStories: storyId } }
+      : { $addToSet: { savedStories: storyId } };
 
     await User.findByIdAndUpdate(req.user._id, update);
 
     res.status(200).json({
-      message: isSaved ? 'Story removed from saved' : 'Story added to saved',
+      message: isSaved ? 'Story removed' : 'Story added',
       isSaved: !isSaved,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 };
