@@ -19,8 +19,9 @@ export const getAllStoriesSchema = {
 export const createStorySchema = {
   [Segments.BODY]: Joi.object().keys({
     // img: Joi.string().uri().required(),
-    title: Joi.string().min(1).required(),
-    article: Joi.string().allow(''),
-    category: Joi.string().valid(...TAGS),
+    title: Joi.string().min(1).max(80).required(),
+    article: Joi.string().max(2500).required(),
+    category: Joi.string().custom(objectIdValidator),
+    // category: Joi.string().valid(...TAGS),
   }),
 };

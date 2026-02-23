@@ -1,13 +1,14 @@
 import { Router } from 'express';
-import { createStorySchema } from '../validations/storiesValidation';
-import { createStory } from '../controllers/storiesController';
+import { createStorySchema } from '../validations/storiesValidation.js';
+import { createStory } from '../controllers/storiesController.js';
+import { celebrate } from 'celebrate';
 const router = Router();
 
 router.post(
   '/stories',
-  authentificate,
+  //   authentificate,
   //   upload.single('img'),
-  validate(createStorySchema),
+  celebrate(createStorySchema),
   createStory,
 );
 

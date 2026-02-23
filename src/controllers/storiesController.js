@@ -1,7 +1,10 @@
+import { Story } from '../models/story.js';
+
 export const createStory = async (req, res) => {
-  const newNote = await Note.create({
+  const newStory = await Story.create({
     ...req.body,
-    userId: req.user._id,
+    ownerId: req.user._id,
+    category: req.body.category || null,
   });
-  res.status(201).json(newNote);
+  res.status(201).json(newStory);
 };
