@@ -9,8 +9,7 @@ export const getUsers = async (req, res, next) => {
     const totalUsers = await User.countDocuments();
     const users = await User.find()
       .skip(skip)
-      .limit(perPage)
-      .select('-password');
+      .limit(perPage);
 
     res.status(200).json({
       page,
