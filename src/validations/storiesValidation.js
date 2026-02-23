@@ -15,3 +15,12 @@ export const getAllStoriesSchema = {
     category: Joi.string().custom(objectIdValidator),
   }),
 };
+
+export const createStorySchema = {
+  [Segments.BODY]: Joi.object().keys({
+    // img: Joi.string().uri().required(),
+    title: Joi.string().min(1).required(),
+    article: Joi.string().allow(''),
+    category: Joi.string().valid(...TAGS),
+  }),
+};
