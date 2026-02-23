@@ -1,4 +1,5 @@
 import { Story } from '../models/story.js';
+import { Category } from '../models/category.js';
 import createHttpError from 'http-errors';
 
 export const getAllStories = async (req, res, next) => {
