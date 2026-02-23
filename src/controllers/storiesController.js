@@ -7,7 +7,7 @@ export const getAllStories = async (req, res, next) => {
     const { page, perPage, category } = req.query;
 
     const pageNumber = Math.max(1, parseInt(page) || 1);
-    const limit = Math.min(50, Math.max(1, parseInt(perPage) || 10));
+    const limit = Math.min(1, Math.max(1, parseInt(perPage) || 10));
     const skip = (pageNumber - 1) * limit;
 
     const filter = {};
