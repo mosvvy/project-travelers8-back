@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { Story } from '../models/story.js';
 import createHttpError from 'http-errors';
 
@@ -6,28 +5,22 @@ export const getAllStories = async (req, res, next) => {
   try {
     const { page, perPage, category } = req.query;
 
-    const pageNumber = Math.max(1, parseInt(page) || 1);
-    const limit = Math.min(1, Math.max(1, parseInt(perPage) || 10));
-    const skip = (pageNumber - 1) * limit;
+    const skip = (page - 1) * perPage;
 
     const filter = {};
 
     if (category) {
-      if (!mongoose.Types.ObjectId.isValid(category)) {
-        throw createHttpError(400, 'Invalid category id');
-      }
-
-      filter.category = new mongoose.Types.ObjectId(category);
+      filter.category = category;
     }
 
     const [totalStories, stories] = await Promise.all([
       Story.countDocuments(filter),
       Story.find(filter)
         .skip(skip)
-        .limit(limit)
+        .limit(perPage)
         .populate({
           path: 'ownerId',
-          select: 'name avatar',
+          select: 'name avatarUrl',
         })
         .populate({
           path: 'category',
@@ -35,11 +28,11 @@ export const getAllStories = async (req, res, next) => {
         }),
     ]);
 
-    const totalPages = Math.max(1, Math.ceil(totalStories / limit));
+    const totalPages = Math.max(1, Math.ceil(totalStories / perPage) || 1);
 
     res.status(200).json({
-      page: pageNumber,
-      perPage: limit,
+      page,
+      perPage,
       totalStories,
       totalPages,
       stories,
