@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { authenticate } from '../middleware/authenticate.js';
 import { createStorySchema } from '../validations/storiesValidation.js';
 import { createStory } from '../controllers/storiesController.js';
 import { celebrate } from 'celebrate';
@@ -6,7 +7,7 @@ const router = Router();
 
 router.post(
   '/stories',
-  //   authentificate,
+  authenticate,
   //   upload.single('img'),
   celebrate(createStorySchema),
   createStory,
