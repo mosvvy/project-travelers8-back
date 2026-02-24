@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+import cookieParser from 'cookie-parser';
+import { errors } from 'celebrate';
 
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
@@ -11,15 +13,20 @@ import { connectMongoDB } from './db/connectMongoDB.js';
 import storiesRoutes from './routes/storiesRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
-import { errors } from 'celebrate';
-import cookieParser from 'cookie-parser';
 
 const app = express();
-const PORT = process.env.PORT ?? 3000;
+const PORT = process.env.PORT ?? 4000;
 
 app.use(logger);
 app.use(express.json());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_DOMAIN,
+    credentials: true,
+  }),
+);
+
 app.use(cookieParser());
 
 app.use(authRoutes);
@@ -27,9 +34,7 @@ app.use(usersRoutes);
 app.use(storiesRoutes);
 
 app.use(notFoundHandler);
-
 app.use(errors());
-
 app.use(errorHandler);
 
 await connectMongoDB();
