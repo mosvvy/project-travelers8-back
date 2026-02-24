@@ -1,22 +1,23 @@
-import createHttpError from 'http-errors';
-import { updateStory } from '../services/stories.js';
+import Story from '../models/story.js';
 
 export const updateStoryController = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { storyId } = req.params;
     const userId = req.user._id;
 
-    const updatedStory = await updateStory(id, userId, req.body);
+    const updatedStory = await Story.findOneAndUpdate(
+      { _id: storyId, owner: userId },
+      req.body,
+      { new: true },
+    );
 
     if (!updatedStory) {
-      throw createHttpError(404, 'Story not found');
+      return res.status(404).json({
+        message: 'Story not found',
+      });
     }
 
-    res.status(200).json({
-      status: 200,
-      message: 'Story updated successfully',
-      data: updatedStory,
-    });
+    res.json(updatedStory);
   } catch (error) {
     next(error);
   }

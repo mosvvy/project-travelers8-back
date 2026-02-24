@@ -5,6 +5,6 @@ import { authenticate } from '../middleware/authenticate.js';
 const router = express.Router();
 
 // PATCH /api/stories/:id
-router.patch('/:id', authenticate, updateStoryController);
+router.patch('/:storyId', authenticate, updateStoryController);
 
 export default router;
