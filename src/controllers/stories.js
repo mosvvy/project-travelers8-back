@@ -8,7 +8,7 @@ export const updateStoryController = async (req, res, next) => {
     const updatedStory = await Story.findOneAndUpdate(
       { _id: storyId, owner: userId },
       req.body,
-      { new: true },
+      { new: true, runValidators: true },
     );
 
     if (!updatedStory) {
@@ -17,7 +17,7 @@ export const updateStoryController = async (req, res, next) => {
       });
     }
 
-    res.json(updatedStory);
+    return res.status(200).json(updatedStory);
   } catch (error) {
     next(error);
   }
