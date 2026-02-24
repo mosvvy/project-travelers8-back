@@ -1,10 +1,18 @@
 import { Router } from 'express';
-import { authenticate } from '../middleware/authenticate.js';
-import { createStorySchema } from '../validations/storiesValidation.js';
-import { createStory } from '../controllers/storiesController.js';
 import { celebrate } from 'celebrate';
+import {
+  getAllStories,
+  createStory,
+} from '../controllers/storiesController.js';
+import {
+  getAllStoriesSchema,
+  createStorySchema,
+} from '../validations/storiesValidation.js';
+import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
 const router = Router();
+
+router.get('/stories', celebrate(getAllStoriesSchema), getAllStories);
 
 router.post(
   '/stories',
