@@ -5,7 +5,7 @@ import {
   getUsers,
   getUserById,
   getCurrentUser,
-} from '../controllers/userController.js';
+} from '../controllers/usersController.js';
 import { getUserByIdSchema } from '../validations/usersValidation.js';
 
 const router = Router();

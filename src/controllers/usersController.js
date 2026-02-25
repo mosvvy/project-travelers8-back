@@ -44,3 +44,7 @@ export const getUserById = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getCurrentUser = async (req, res) => {
+  res.status(200).json(req.user);
+};
