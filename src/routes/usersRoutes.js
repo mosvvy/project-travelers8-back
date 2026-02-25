@@ -1,11 +1,17 @@
 import { Router } from 'express';
+import { authenticate } from '../middleware/authenticate.js';
 import { celebrate } from 'celebrate';
-import { getUserById } from '../controllers/usersController.js';
+import {
+  getUsers,
+  getUserById,
+  getCurrentUser,
+} from '../controllers/userController.js';
 import { getUserByIdSchema } from '../validations/usersValidation.js';
 
 const router = Router();
 
-// Route only — controller contains logic
+router.get('/users', getUsers);
+router.get('/users/me', authenticate, getCurrentUser);
 router.get('/users/:id', celebrate(getUserByIdSchema), getUserById);
 
 export default router;
