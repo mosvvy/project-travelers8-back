@@ -31,7 +31,7 @@ const storySchema = new Schema(
     },
 
     date: {
-      type: Date,
+      type: String,
       required: true,
     },
 
