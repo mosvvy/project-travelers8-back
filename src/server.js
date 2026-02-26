@@ -16,10 +16,19 @@ import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
+const allowedOrigins = [
+  `http://localhost:${process.env.PORT_FRONT ?? 3001}`,
+  process.env.FRONTEND_DOMAIN ?? 'https://project-travelers8-front.vercel.app/',
+];
 
 app.use(logger);
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
 app.use(cookieParser());
 
 app.use(authRoutes);
