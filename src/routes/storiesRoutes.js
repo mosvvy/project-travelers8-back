@@ -8,13 +8,14 @@ import {
 import {
   getAllStoriesSchema,
   createStorySchema,
+  getStoryByIdSchema,
 } from '../validations/storiesValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
 const router = Router();
 
 router.get('/stories', celebrate(getAllStoriesSchema), getAllStories);
-router.get('/stories/:id', getStory);
+router.get('/stories/:id', celebrate(getStoryByIdSchema), getStory);
 router.post(
   '/stories',
   authenticate,
