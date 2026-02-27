@@ -47,16 +47,16 @@ export const getAllStories = async (req, res, next) => {
 export const getStory = async (req, res) => {
   const { id } = req.params;
 
-  const story = await Story.findById(id).populate(['category', 'ownerId']).lean();
+  const story = await Story.findById(id)
+    .populate(['category', 'ownerId'])
+    .lean();
 
   if (!story) {
-    next(createHttpError(404, 'Story not found'));
-    return;
+    throw createHttpError(404, 'Story not found');
   }
 
   res.status(200).json(story);
 };
-
 
 const getCurrentDate = () => {
   const now = new Date();
