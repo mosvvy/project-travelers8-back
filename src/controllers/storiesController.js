@@ -47,7 +47,7 @@ export const getAllStories = async (req, res, next) => {
 export const getStory = async (req, res) => {
   const { id } = req.params;
 
-  const story = await Story.findById(id).lean();
+  const story = await Story.findById(id).populate(['category', 'ownerId']).lean();
 
   if (!story) {
     next(createHttpError(404, 'Story not found'));
