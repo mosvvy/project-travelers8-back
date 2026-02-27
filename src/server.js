@@ -30,7 +30,7 @@ app.use(
     credentials: true,
   }),
 );
-main;
+
 app.use(cookieParser());
 
 app.use(authRoutes);
