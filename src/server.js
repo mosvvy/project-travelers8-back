@@ -15,18 +15,22 @@ import authRoutes from './routes/authRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 
 const app = express();
-const PORT = process.env.PORT ?? 4000;
+
+const PORT = process.env.PORT ?? 3000;
+const allowedOrigins = [
+  `http://localhost:${process.env.PORT_FRONT ?? 3001}`,
+  process.env.FRONTEND_DOMAIN ?? 'https://project-travelers8-front.vercel.app/',
+];
 
 app.use(logger);
 app.use(express.json());
-
 app.use(
   cors({
-    origin: process.env.FRONTEND_DOMAIN,
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
-
+main;
 app.use(cookieParser());
 
 app.use(authRoutes);
