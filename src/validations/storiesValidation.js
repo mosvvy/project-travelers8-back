@@ -34,3 +34,14 @@ export const getStoryByIdSchema = {
     }),
   }),
 };
+
+export const updateStorySchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    storyId: Joi.string().custom(objectIdValidator).required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    title: Joi.string().min(1).max(80),
+    article: Joi.string().max(2500),
+    category: Joi.string().custom(objectIdValidator),
+  }),
+};
