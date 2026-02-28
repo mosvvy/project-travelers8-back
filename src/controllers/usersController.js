@@ -56,12 +56,12 @@ export const saveStory = async (req, res, next) => {
 
     const story = await Story.findById(storyId);
     if (!story) {
-      return next(createHttpError(404, 'Story not found'));
+      return createHttpError(404, 'Story not found');
     }
 
     const user = await User.findById(userId);
     if (!user) {
-      return next(createHttpError(404, 'User not found'));
+      return createHttpError(404, 'User not found');
     }
 
     const isSaved = user.savedStories.includes(storyId);
