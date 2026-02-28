@@ -1,5 +1,15 @@
 import { Schema, model } from 'mongoose';
-const categorySchema = new Schema({
-  name: { type: String, required: true, trim: true },
-});
+
+const categorySchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+  },
+  { timestamps: true, versionKey: false },
+);
+
 export const Category = model('Category', categorySchema);
