@@ -4,11 +4,13 @@ import {
   getAllStories,
   createStory,
   updateStoryController,
+  getFavouriteStories,
 } from '../controllers/storiesController.js';
 import {
   getAllStoriesSchema,
   createStorySchema,
   updateStorySchema,
+  getFavouriteStoriesSchema,
 } from '../validations/storiesValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
@@ -28,6 +30,13 @@ router.post(
   upload.single('img'),
   celebrate(createStorySchema),
   createStory,
+);
+
+router.get(
+  '/stories/favourite',
+  authenticate,
+  celebrate(getFavouriteStoriesSchema),
+  getFavouriteStories,
 );
 
 export default router;
