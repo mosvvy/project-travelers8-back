@@ -1,12 +1,5 @@
 import { Joi, Segments } from 'celebrate';
-import { isValidObjectId } from 'mongoose';
-
-const objectIdValidator = (value, helpers) => {
-  if (!isValidObjectId(value)) {
-    return helpers.message('Invalid id format');
-  }
-  return value;
-};
+import { objectIdValidator } from './lib.js';
 
 export const getAllStoriesSchema = {
   [Segments.QUERY]: Joi.object().keys({
@@ -43,5 +36,12 @@ export const updateStorySchema = {
     title: Joi.string().min(1).max(80),
     article: Joi.string().max(2500),
     category: Joi.string().custom(objectIdValidator),
+  }),
+};
+
+export const getFavouriteStoriesSchema = {
+  [Segments.QUERY]: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    perPage: Joi.number().integer().min(1).max(100).default(10),
   }),
 };
