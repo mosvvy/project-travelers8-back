@@ -29,7 +29,7 @@ const userSchema = new Schema(
       type: String,
       trim: true,
     },
-    savedArticles: [
+    savedStories: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Story',
