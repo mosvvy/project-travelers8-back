@@ -77,9 +77,9 @@ export const updateStoryController = async (req, res, next) => {
     const userId = req.user._id;
 
     const updatedStory = await Story.findOneAndUpdate(
-      { _id: storyId, owner: userId },
+      { _id: storyId, ownerId: userId },
       req.body,
-      { new: true, runValidators: true },
+      // { new: true, runValidators: true },
     );
 
     if (!updatedStory) {

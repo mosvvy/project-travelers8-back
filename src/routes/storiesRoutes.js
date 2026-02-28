@@ -3,19 +3,24 @@ import { celebrate } from 'celebrate';
 import {
   getAllStories,
   createStory,
+  updateStoryController,
 } from '../controllers/storiesController.js';
 import {
   getAllStoriesSchema,
   createStorySchema,
+  updateStorySchema,
 } from '../validations/storiesValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
 const router = Router();
-import { updateStoryController } from '../controllers/storiesController.js';
-import { authenticate } from '../middleware/authenticate.js';
 
 router.get('/stories', celebrate(getAllStoriesSchema), getAllStories);
-router.patch('/stories/:storyId', authenticate, updateStoryController);
+router.patch(
+  '/stories/:storyId',
+  authenticate,
+  celebrate(updateStorySchema),
+  updateStoryController,
+);
 
 router.post(
   '/stories',
