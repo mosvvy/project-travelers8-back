@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-const articleSchema = new Schema(
+const storySchema = new Schema(
   {
     img: {
       type: String,
@@ -31,7 +31,7 @@ const articleSchema = new Schema(
     },
 
     date: {
-      type: Date,
+      type: String,
       required: true,
     },
 
@@ -46,4 +46,4 @@ const articleSchema = new Schema(
   },
 );
 
-module.exports = model('Article', articleSchema);
+export const Story = model('Story', storySchema);
