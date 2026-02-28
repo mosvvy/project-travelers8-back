@@ -55,7 +55,6 @@ export const saveStory = async (req, res, next) => {
     const userId = req.user._id;
 
     const story = await Story.findById(storyId);
-    // console.log('Story found:', story);
     if (!story) {
       throw createHttpError(404, 'Story not found');
     }
@@ -65,15 +64,12 @@ export const saveStory = async (req, res, next) => {
       throw createHttpError(404, 'User not found');
     }
 
-    console.log('User found:', user);
     const isSaved = user.savedStories.includes(storyId);
     const operation = isSaved ? '$pull' : '$addToSet';
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { [operation]: { savedStories: storyId } },
-      // { new: true },
-    );
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      [operation]: { savedStories: storyId },
+    });
 
     res.status(200).json({
       message: isSaved ? 'Story removed from saved' : 'Story added to saved',
