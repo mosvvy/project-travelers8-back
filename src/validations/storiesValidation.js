@@ -18,6 +18,12 @@ export const createStorySchema = {
   }),
 };
 
+export const getStoryByIdSchema = {
+  [Segments.PARAMS]: Joi.object({
+    id: Joi.string().custom(objectIdValidator).required(),
+  }),
+};
+
 export const updateStorySchema = {
   [Segments.PARAMS]: Joi.object().keys({
     storyId: Joi.string().custom(objectIdValidator).required(),
