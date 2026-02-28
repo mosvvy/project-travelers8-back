@@ -1,5 +1,6 @@
 // filepath: d:\Projects\project-travelers8-back\src\validations\usersValidation.js
 import { Joi, Segments } from 'celebrate';
+import { objectIdValidator } from './lib.js';
 
 export const getUserByIdSchema = {
   [Segments.PARAMS]: Joi.object({
@@ -8,5 +9,11 @@ export const getUserByIdSchema = {
       'string.length': 'Invalid user id length',
       'any.required': 'User id is required',
     }),
+  }),
+};
+
+export const saveStorySchema = {
+  [Segments.BODY]: Joi.object({
+    storyId: Joi.string().custom(objectIdValidator).required(),
   }),
 };

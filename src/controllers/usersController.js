@@ -51,7 +51,7 @@ export const getCurrentUser = async (req, res) => {
 
 export const saveStory = async (req, res, next) => {
   try {
-    const { storyId } = req.params;
+    const { storyId } = req.body;
     const userId = req.user._id;
 
     const story = await Story.findById(storyId);

@@ -7,13 +7,16 @@ import {
   getCurrentUser,
   saveStory,
 } from '../controllers/usersController.js';
-import { getUserByIdSchema } from '../validations/usersValidation.js';
+import {
+  getUserByIdSchema,
+  saveStorySchema,
+} from '../validations/usersValidation.js';
 
 const router = Router();
 
 router.get('/users', getUsers);
 router.get('/users/me', authenticate, getCurrentUser);
 router.get('/users/:id', celebrate(getUserByIdSchema), getUserById);
-router.post('/users/save', authenticate, saveStory);
+router.post('/users/save', authenticate, celebrate(saveStorySchema), saveStory);
 
 export default router;
