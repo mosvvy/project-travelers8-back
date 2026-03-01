@@ -9,7 +9,7 @@ const categorySchema = new Schema(
       trim: true,
     },
   },
-  { timestamps: true, versionKey: false },
+  { versionKey: false },
 );
 
 export const Category = model('Category', categorySchema);
