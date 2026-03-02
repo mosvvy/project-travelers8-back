@@ -6,6 +6,7 @@ import { Story } from '../models/story.js';
 export const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { category } = req.query;
 
     const user = await User.findById(id).lean();
     if (!user) {
@@ -14,7 +15,10 @@ export const getUserById = async (req, res, next) => {
 
     if (user.password) delete user.password;
 
-    const articles = await Story.find({ ownerId: id })
+    const filter = { ownerId: id };
+    if (category) filter.category = category;
+
+    const articles = await Story.find(filter)
       .select('title img date favoriteCount category')
       .sort({ date: -1 })
       .lean();

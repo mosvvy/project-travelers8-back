@@ -9,4 +9,10 @@ export const getUserByIdSchema = {
       'any.required': 'User id is required',
     }),
   }),
+  [Segments.QUERY]: Joi.object({
+    category: Joi.string().hex().length(24).optional().messages({
+      'string.hex': 'Invalid category id format',
+      'string.length': 'Invalid category id length',
+    }),
+  }),
 };
