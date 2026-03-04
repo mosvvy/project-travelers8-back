@@ -6,6 +6,7 @@ import {
   createStory,
   updateStoryController,
   getFavouriteStories,
+  getPopularStories,
 } from '../controllers/storiesController.js';
 import {
   getAllStoriesSchema,
@@ -18,6 +19,7 @@ import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
 const router = Router();
 
+router.get('/stories/popular', getPopularStories);
 router.get('/stories', celebrate(getAllStoriesSchema), getAllStories);
 router.get('/stories/:id', celebrate(getStoryByIdSchema), getStory);
 router.patch(

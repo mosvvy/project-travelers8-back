@@ -131,3 +131,22 @@ export const getFavouriteStories = async (req, res) => {
     stories,
   });
 };
+export const getPopularStories = async (req, res, next) => {
+  try {
+    const stories = await Story.find({})
+      .sort({ favoriteCount: -1 })
+      .limit(4)
+      .populate({
+        path: 'ownerId',
+        select: 'name avatarUrl',
+      })
+      .populate({
+        path: 'category',
+        select: 'name',
+      });
+
+    res.status(200).json(stories);
+  } catch (error) {
+    next(error);
+  }
+};
