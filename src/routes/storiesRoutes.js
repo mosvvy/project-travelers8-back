@@ -7,6 +7,7 @@ import {
   updateStoryController,
   getFavouriteStories,
   getPopularStories,
+  getOwnStories,
 } from '../controllers/storiesController.js';
 import {
   getAllStoriesSchema,
@@ -17,11 +18,28 @@ import {
 } from '../validations/storiesValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/multer.js';
+
 const router = Router();
 
 router.get('/stories/popular', getPopularStories);
+
+router.get(
+  '/stories/favourite',
+  authenticate,
+  celebrate(getFavouriteStoriesSchema),
+  getFavouriteStories,
+);
+router.get(
+  '/stories/own',
+  authenticate,
+  celebrate(getAllStoriesSchema),
+  getOwnStories,
+);
+
 router.get('/stories', celebrate(getAllStoriesSchema), getAllStories);
+
 router.get('/stories/:id', celebrate(getStoryByIdSchema), getStory);
+
 router.patch(
   '/stories/:storyId',
   authenticate,
@@ -35,13 +53,6 @@ router.post(
   upload.single('img'),
   celebrate(createStorySchema),
   createStory,
-);
-
-router.get(
-  '/stories/favourite',
-  authenticate,
-  celebrate(getFavouriteStoriesSchema),
-  getFavouriteStories,
 );
 
 export default router;

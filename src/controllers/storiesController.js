@@ -131,6 +131,36 @@ export const getFavouriteStories = async (req, res) => {
     stories,
   });
 };
+export const getOwnStories = async (req, res, next) => {
+  try {
+    const pageNum = Number(req.query.page) || 1;
+    const perPageNum = Number(req.query.perPage) || 6;
+    const skip = (pageNum - 1) * perPageNum;
+
+    const filter = { ownerId: req.user._id };
+
+    const [totalStories, stories] = await Promise.all([
+      Story.countDocuments(filter),
+      Story.find(filter)
+        .skip(skip)
+        .limit(perPageNum)
+        .populate({ path: 'ownerId', select: 'name avatarUrl' })
+        .populate({ path: 'category', select: 'name' }),
+    ]);
+
+    const totalPages = Math.max(1, Math.ceil(totalStories / perPageNum) || 1);
+
+    res.status(200).json({
+      page: pageNum,
+      perPage: perPageNum,
+      totalStories,
+      totalPages,
+      stories,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export const getPopularStories = async (req, res, next) => {
   try {
     const stories = await Story.find({})
