@@ -48,7 +48,8 @@ export const getStory = async (req, res) => {
   const { id } = req.params;
 
   const story = await Story.findById(id)
-    .populate(['category', 'ownerId'])
+    .populate({ path: 'ownerId', select: 'name avatarUrl' })
+    .populate({ path: 'category', select: 'name' })
     .lean();
 
   if (!story) {
@@ -66,7 +67,7 @@ const getCurrentDate = () => {
   return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
 };
 
-export const createStory = async (req, res) => {
+export const createStory = async (req, res, next) => {
   if (!req.file) {
     next(createHttpError(400, 'No file'));
     return;
@@ -93,8 +94,10 @@ export const updateStoryController = async (req, res, next) => {
     const updatedStory = await Story.findOneAndUpdate(
       { _id: storyId, ownerId: userId },
       req.body,
-      // { new: true, runValidators: true },
-    );
+      { new: true, runValidators: true },
+    )
+      .populate({ path: 'ownerId', select: 'name avatarUrl' })
+      .populate({ path: 'category', select: 'name' });
 
     if (!updatedStory) {
       return res.status(404).json({
@@ -144,6 +147,7 @@ export const getFavouriteStories = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getOwnStories = async (req, res, next) => {
   try {
     const pageNum = Number(req.query.page) || 1;
@@ -174,6 +178,7 @@ export const getOwnStories = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getPopularStories = async (req, res, next) => {
   try {
     const stories = await Story.find({})
