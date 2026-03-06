@@ -67,7 +67,7 @@ const getCurrentDate = () => {
   return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
 };
 
-export const createStory = async (req, res) => {
+export const createStory = async (req, res, next) => {
   if (!req.file) {
     next(createHttpError(400, 'No file'));
     return;
@@ -94,8 +94,10 @@ export const updateStoryController = async (req, res, next) => {
     const updatedStory = await Story.findOneAndUpdate(
       { _id: storyId, ownerId: userId },
       req.body,
-      // { new: true, runValidators: true },
-    );
+      { new: true, runValidators: true },
+    )
+      .populate({ path: 'ownerId', select: 'name avatarUrl' })
+      .populate({ path: 'category', select: 'name' });
 
     if (!updatedStory) {
       return res.status(404).json({
@@ -109,31 +111,43 @@ export const updateStoryController = async (req, res, next) => {
   }
 };
 
-export const getFavouriteStories = async (req, res) => {
-  const { page, perPage } = req.query;
-  const skip = (page - 1) * perPage;
+export const getFavouriteStories = async (req, res, next) => {
+  try {
+    const pageNum = Number(req.query.page) || 1;
+    const perPageNum = Number(req.query.perPage) || 6;
+    const skip = (pageNum - 1) * perPageNum;
 
-  const savedStoriesIds = req.user.savedStories;
+    const savedStoriesIds = req.user.savedStories;
 
-  const [totalItems, stories] = await Promise.all([
-    Story.countDocuments({ _id: { $in: savedStoriesIds } }),
-    Story.find({ _id: { $in: savedStoriesIds } })
-      .skip(skip)
-      .limit(perPage)
-      .populate({ path: 'ownerId', select: 'name avatarUrl' })
-      .populate({ path: 'category', select: 'name' }),
-  ]);
+    const [totalStories, stories] = await Promise.all([
+      Story.countDocuments({ _id: { $in: savedStoriesIds } }),
+      Story.find({ _id: { $in: savedStoriesIds } })
+        .skip(skip)
+        .limit(perPageNum)
+        .populate({
+          path: 'ownerId',
+          select: 'name avatarUrl',
+        })
+        .populate({
+          path: 'category',
+          select: 'name',
+        }),
+    ]);
 
-  const totalPages = Math.ceil(totalItems / perPage);
+    const totalPages = Math.max(1, Math.ceil(totalStories / perPageNum) || 1);
 
-  res.status(200).json({
-    page,
-    perPage,
-    totalItems,
-    totalPages,
-    stories,
-  });
+    res.status(200).json({
+      page: pageNum,
+      perPage: perPageNum,
+      totalStories,
+      totalPages,
+      stories,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
+
 export const getOwnStories = async (req, res, next) => {
   try {
     const pageNum = Number(req.query.page) || 1;
@@ -164,6 +178,7 @@ export const getOwnStories = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getPopularStories = async (req, res, next) => {
   try {
     const stories = await Story.find({})
