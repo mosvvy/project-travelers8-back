@@ -48,7 +48,8 @@ export const getStory = async (req, res) => {
   const { id } = req.params;
 
   const story = await Story.findById(id)
-    .populate(['category', 'ownerId'])
+    .populate({ path: 'ownerId', select: 'name avatarUrl' })
+    .populate({ path: 'category', select: 'name' })
     .lean();
 
   if (!story) {
@@ -118,7 +119,9 @@ export const getFavouriteStories = async (req, res) => {
     Story.countDocuments({ _id: { $in: savedStoriesIds } }),
     Story.find({ _id: { $in: savedStoriesIds } })
       .skip(skip)
-      .limit(perPage),
+      .limit(perPage)
+      .populate({ path: 'ownerId', select: 'name avatarUrl' })
+      .populate({ path: 'category', select: 'name' }),
   ]);
 
   const totalPages = Math.ceil(totalItems / perPage);
