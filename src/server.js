@@ -15,11 +15,14 @@ import authRoutes from './routes/authRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 const app = express();
+app.set('trust proxy', 1);
 
 const PORT = process.env.PORT ?? 3000;
 const allowedOrigins = [
   `http://localhost:${process.env.PORT_FRONT ?? 3001}`,
-  process.env.FRONTEND_DOMAIN ?? 'https://project-travelers8-front.vercel.app/',
+  (
+    process.env.FRONTEND_DOMAIN ?? 'https://project-travelers8-front.vercel.app'
+  ).replace(/\/$/, ''),
 ];
 
 app.use(logger);
